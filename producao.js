@@ -10,19 +10,19 @@ const sql = require("mssql");
  * Gravar arquivo ✓
  */
 
-const ROTA = "7574";
+const OP = "241390";
 
 async function getDataFromDatabase() {
   try {
     const db = await database.getConnection();
     const sqlFile = fs.readFileSync(
-      path.join(__dirname, "queries", "rota.sql"),
+      path.join(__dirname, "queries", "op.sql"),
       "utf8"
     );
 
     let result = await db
       .request()
-      .input("input_parameter", sql.VarChar, ROTA)
+      .input("input_parameter", sql.VarChar, OP)
       .query(sqlFile);
 
     await database.closeConnection();
@@ -39,43 +39,45 @@ async function getDataFromDatabase() {
 
 function getTemplateFile() {
   const template = fs.readFileSync(
-    path.join(__dirname, "template.zpl"),
+    path.join(__dirname, "template_producao.prn"),
     "utf8"
   );
   return template;
 }
 
-function replaceDataOnTemplate(templateFile, dataRota) {
+function replaceDataOnTemplate(templateFile, dataOp) {
   let dataToWrite = "";
   let finalData = "";
 
-  dataRota.forEach((element) => {
+  dataOp.forEach((element) => {
     dataToWrite = templateFile
-      .replace(/COD_ITEM/g, element.COD_ITEM)
-      .replace(/Estado/g, element.Estado)
+      .replace(/Data1/g, element.Data1)
+      .replace(/NumSerie/g, element.NumSerie)
+      .replace(/LM/g, element.LM)
+      .replace(/Ref/g, element.Ref)
+      .replace(/Tam/g, element.Tam)
+      .replace(/Cor/g, element.Cor)
+      .replace(/Forro/g, element.Forro)
+      .replace(/Adn/g, element.Adn)
+      .replace(/Alc/g, element.Alc)
+      .replace(/Telefone/g, element.Telefone)
       .replace(/Cidade/g, element.Cidade)
-      .replace(/OrdCar/g, element.OrdCar)
       .replace(/CodBig/g, element.CodBig)
-      .replace(/NumRota/g, element.NumRota)
-      .replace(/NUM_PED/g, element.NUM_PED)
-      .replace(/Code_PN/g, element.Code_PN)
-      .replace(/Nome_PN/g, element.Nome_PN)
-      .replace(/Catalogo/g, element.Catalogo)
-      .replace(/Desc_Item/g, element.Desc_Item)
-      .replace(/NUMPKL/g, element.NUMPKL)
-      .replace(/PQ1/g, `PQ${element.Quantidade * 2}`);
+      .replace(/Descricao/g, element.Descricao)
+      .replace(/OP/g, element.OP);
+    // .replace(/PQ1/g, `PQ${element.Quantidade * 2}`);
 
     finalData = finalData + dataToWrite;
   });
-  fs.writeFileSync(`${ROTA}.txt`, finalData, {
+  fs.writeFileSync(`${OP}.txt`, finalData, {
     encoding: "utf8",
   });
 }
 
 async function etiqueta() {
   const templateFile = getTemplateFile();
-  const dataRota = await getDataFromDatabase();
-  replaceDataOnTemplate(templateFile, dataRota);
+  const dataOp = await getDataFromDatabase();
+  replaceDataOnTemplate(templateFile, dataOp);
 }
 
 etiqueta();

@@ -5,6 +5,6 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.0",
-    "mssql": "^6.2.0"
+    "mssql": "6.2.0"
   }
 }
