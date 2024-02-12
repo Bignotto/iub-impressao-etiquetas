@@ -10,7 +10,7 @@ const sql = require("mssql");
  * Gravar arquivo ✓
  */
 
-const OP = "241390";
+const OP = process.argv[2]; //"241953""241954""241955""241956""241957""241958""241959""241960""241961""241962""241963""241964""241965""241966""241967""241968""241969""241970""241971""241972""241973""241974""241975""241976""241977""241978""241979""241980""241981""241982""241983"
 
 async function getDataFromDatabase() {
   try {
@@ -50,28 +50,34 @@ function replaceDataOnTemplate(templateFile, dataOp) {
   let finalData = "";
 
   dataOp.forEach((element) => {
-    dataToWrite = templateFile
-      .replace(/Data1/g, element.Data1)
-      .replace(/NumSerie/g, element.NumSerie)
-      .replace(/LM/g, element.LM)
-      .replace(/Ref/g, element.Ref)
-      .replace(/Tam/g, element.Tam)
-      .replace(/Cor/g, element.Cor)
-      .replace(/Forro/g, element.Forro)
-      .replace(/Adn/g, element.Adn)
-      .replace(/Alc/g, element.Alc)
-      .replace(/Telefone/g, element.Telefone)
-      .replace(/Cidade/g, element.Cidade)
-      .replace(/CodBig/g, element.CodBig)
-      .replace(/Descricao/g, element.Descricao)
-      .replace(/OP/g, element.OP);
-    // .replace(/PQ1/g, `PQ${element.Quantidade * 2}`);
-
-    finalData = finalData + dataToWrite;
+    for (i = 0; i < element.Quantidade; i++) {
+      dataToWrite = templateFile
+        .replace(/Data1/g, element.Data1)
+        .replace(
+          /NumSerie/g,
+          `${element.NumSerie}${String(i + 1).padStart(4, "0")}`
+        )
+        .replace(/LM/g, element.LM)
+        .replace(/Ref/g, element.Ref)
+        .replace(/Tam/g, element.Tam)
+        .replace(/Cor/g, element.Cor)
+        .replace(/Forro/g, element.Forro)
+        .replace(/Adn/g, element.Adn)
+        .replace(/Alc/g, element.Alc)
+        .replace(/Telefone/g, element.Telefone)
+        .replace(/Cidade/g, element.Cidade)
+        .replace(/CodBig/g, element.CodBig)
+        .replace(/Descricao/g, element.Descricao)
+        .replace(/OP/g, element.OP);
+      // .replace(/PQ1/g, `PQ${element.Quantidade * 2}`);
+      finalData = finalData + dataToWrite;
+      // console.log(`${element.NumSerie}${String(i + 1).padStart(4, "0")}`);
+    }
   });
   fs.writeFileSync(`${OP}.txt`, finalData, {
     encoding: "utf8",
   });
+  console.log(`${OP}.txt`);
 }
 
 async function etiqueta() {

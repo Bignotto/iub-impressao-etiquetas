@@ -1,10 +1,10 @@
-declare @OP int
+-- declare @OP int
 
-set @OP = @input_parameter
+-- set @OP = @input_parameter
 
 select
 	FORMAT(GETDATE(), 'dd/mm/yyyy') [Data1],
-	CONCAT(T0.U_UPItmCod,FORMAT(GETDATE(), 'ddmmyyyyhhmmss'),'0001') [NumSerie],
+	CONCAT(T0.U_UPItmCod,FORMAT(GETDATE(), 'ddmmyyyyhhmmss')) [NumSerie],
 	'401' [LM],
 	SUBSTRING(T1.U_UPCodIAn,1,3) [Ref],
 	SUBSTRING(T1.U_UPCodIAn,5,2) [Tam],
@@ -22,4 +22,4 @@ select
 from [dbo].[@UPR_OWOR] T0
 	inner join [dbo].[OITM] T1 on T1.ItemCode = T0.U_UPItmCod
 
-where T0.DocEntry = @OP
+where T0.DocEntry in (@input_parameter)

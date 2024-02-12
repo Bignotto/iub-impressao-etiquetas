@@ -10,7 +10,7 @@ const sql = require("mssql");
  * Gravar arquivo ✓
  */
 
-const ROTA = "7574";
+const ROTA = process.argv[2];
 
 async function getDataFromDatabase() {
   try {
